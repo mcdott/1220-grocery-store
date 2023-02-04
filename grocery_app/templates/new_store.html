@@ -4,10 +4,7 @@
   <fieldset>
     <legend>Please enter your information:</legend>
 
-    {{ form.csrf_token }} {{ form.title.label }} {{ form.title }} {{
-    form.address.label }} {{ form.address }}
-
-    <input type="submit" value="Submit" />
+    {% include '_store_fields.html' %}
   </fieldset>
 </form>
 
