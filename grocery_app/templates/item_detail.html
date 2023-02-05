@@ -11,5 +11,6 @@
 <p><strong>Store:</strong> {{ item.store.title }}</p>
 
 <h2>Edit Item</h2>
+<p>Created by: {{ item.created_by.username }}</p>
 
 {% include '_item_form.html' %} {% endblock %}

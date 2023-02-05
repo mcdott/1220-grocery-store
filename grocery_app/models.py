@@ -19,7 +19,7 @@ class GroceryStore(db.Model):
     address = db.Column(db.String(200), nullable=False)
     items = db.relationship('GroceryItem', back_populates='store')
     created_by_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    created_by = db.relationship('User')
+    created_by = db.relationship('User', back_populates='grocery_stores')
 
 class GroceryItem(db.Model):
     """Grocery Item model."""
@@ -32,13 +32,15 @@ class GroceryItem(db.Model):
         db.Integer, db.ForeignKey('grocery_store.id'), nullable=False)
     store = db.relationship('GroceryStore', back_populates='items')
     created_by_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    created_by = db.relationship('User')    
+    created_by = db.relationship('User', back_populates='grocery_items')    
 
 class User(UserMixin, db.Model):
     """User model"""
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), nullable=False, unique=True)
     password = db.Column(db.String(200), nullable=False)
+    grocery_stores = db.relationship('GroceryStore', back_populates='created_by')
+    grocery_items = db.relationship('GroceryItem', back_populates='created_by')
 
-    # def __repr__(self):
-    #     return f'<User: {self.username}>'
+    def __repr__(self):
+        return f'<User: {self.username}>'
