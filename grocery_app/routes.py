@@ -97,6 +97,23 @@ def item_detail(item_id):
 
     return render_template('item_detail.html', form=form, item=item)
 
+@main.route('/add_to_shopping_list/<item_id>', methods=['POST'])
+@login_required
+def add_to_shopping_list(item_id):
+    # Adds item to current_user's shopping list
+    item = GroceryItem.query.get(item_id)
+    current_user.shopping_list_items.append(item)
+    db.session.commit()
+
+    flash('Item added to shopping list successfully.')
+    return redirect(url_for('main.item_detail', item_id=item.id))
+
+@main.route('/shopping_list')
+@login_required
+def shopping_list():
+    items = current_user.shopping_list_items
+    return render_template('shopping_list.html', items=items)
+
 @auth.route('/signup', methods=['GET', 'POST'])
 def signup():
     print('in signup')

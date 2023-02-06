@@ -32,7 +32,9 @@ class GroceryItem(db.Model):
         db.Integer, db.ForeignKey('grocery_store.id'), nullable=False)
     store = db.relationship('GroceryStore', back_populates='items')
     created_by_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    created_by = db.relationship('User', back_populates='grocery_items')    
+    created_by = db.relationship('User', back_populates='grocery_items')
+    users_who_listed = db.relationship(
+        'User', secondary='user_grocery_item', back_populates="shopping_list_items")    
 
 class User(UserMixin, db.Model):
     """User model"""
@@ -41,6 +43,13 @@ class User(UserMixin, db.Model):
     password = db.Column(db.String(200), nullable=False)
     grocery_stores = db.relationship('GroceryStore', back_populates='created_by')
     grocery_items = db.relationship('GroceryItem', back_populates='created_by')
+    shopping_list_items = db.relationship(
+        'GroceryItem', secondary='user_grocery_item', back_populates='users_who_listed')
 
     def __repr__(self):
         return f'<User: {self.username}>'
+
+shopping_list_table = db.Table('user_grocery_item',
+    db.Column('grocery_item_id', db.Integer, db.ForeignKey('grocery_item.id')),
+    db.Column('user_id', db.Integer, db.ForeignKey('user.id'))
+)
