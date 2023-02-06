@@ -114,6 +114,17 @@ def shopping_list():
     items = current_user.shopping_list_items
     return render_template('shopping_list.html', items=items)
 
+
+@app.route('/shopping_list/<int:item_id>', methods=['POST'])
+@login_required
+def delete_item(item_id):
+    item = GroceryItem.query.get(item_id)
+    current_user.shopping_list_items.remove(item)
+    db.session.commit()
+    return redirect(url_for('main.shopping_list'))
+
+
+
 @auth.route('/signup', methods=['GET', 'POST'])
 def signup():
     print('in signup')
